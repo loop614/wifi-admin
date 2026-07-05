@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.tony.wrapper.wifiparamether.dto.WifiParametherResponse;
-import com.tony.wrapper.wifiparamether.repository.WifiConfigurationRepository;
 
 @Component
 public class WifiParametherScheduler {
@@ -18,24 +17,20 @@ public class WifiParametherScheduler {
             "CPE_007", "CPE_008", "CPE_009", "CPE_010", "CPE_011", "CPE_012");
 
 
-    private final WifiConfigurationRepository repository;
     private final WifiParametherDispatcher dispatcher;
     private final WifiParametherCache cache;
 
     public WifiParametherScheduler(
-        WifiConfigurationRepository repository,
         WifiParametherDispatcher dispatcher,
-        WifiParametherCache wifiParametherCache,
-        WifiConfigurationRepository wifiConfigurationRepository
+        WifiParametherCache wifiParametherCache
     ) {
-        this.repository = repository;
         this.dispatcher = dispatcher;
         this.cache = wifiParametherCache;
     }
 
     @Scheduled(cron = "0 0 2 * * *", zone = "Europe/Zagreb")
     public void syncWifiConfiguration() {
-        this.repository.deleteByCpeIdInOrDateUpdatedBefore(new ArrayList<>(CPE_IDS), java.time.LocalDateTime.now().minusDays(2));
+        this.cache.deleteByCpeIdInOrDateUpdatedBefore(new ArrayList<>(CPE_IDS), java.time.LocalDateTime.now().minusDays(2));
 
         for (String cpeId : CPE_IDS) {
             WifiParametherResponse response = this.dispatcher.fetchFromSoap(cpeId);

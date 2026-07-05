@@ -16,5 +16,7 @@ public interface WifiConfigurationRepository extends JpaRepository<WifiConfigura
 
     ArrayList<WifiConfiguration> findByCpeIdIn(ArrayList<String> cpeIds);
 
+    void deleteByCpeId(String cpeId);
+
     void deleteByCpeIdInOrDateUpdatedBefore(ArrayList<String> cpeIds, LocalDateTime date);
 }

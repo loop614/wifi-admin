@@ -97,7 +97,7 @@ public class WifiParametherDispatcher {
         updateRequest.setConfiguration(configuration);
 
         UpdateCpeIdResponse response = this.soapClient.updateCpeId(updateRequest);
-        this.wifiParametherCache.saveUpdated(response);
+        this.wifiParametherCache.deleteByCpeId(response.getConfiguration().getCpeId());
 
         PutWifiParametherResponse result = new PutWifiParametherResponse();
         WifiConfigurationType configurationResponse = response.getConfiguration();
